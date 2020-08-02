@@ -1,0 +1,21 @@
+---
+title: "DQN"
+output: github_document
+---
+
+
+Dueling Double DQN with Prioritized Replay Buffer
+--------------------------------------
+Episode 50 | Episode 150 | Episode 750
+---------- | ----------- | -----------
+<img src = "Pong/DuelingDoubleDQNGifs/eval_ep_50_step_51540.gif" width = 200 /> | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_150_step_312995.gif" width = 200 /> | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_750_step_1730869.gif" width = 200 />
+
+
+```{r plots}
+eval_reward = read.csv("Pong/DuelingDoubleDQNData/eval_reward.csv")
+training_reward = read.csv("Pong/DuelingDoubleDQNData/training_reward.csv")
+library(tidyverse)
+attach(eval_reward)
+ggplot(eval_reward) + geom_line(mapping = aes(Step,Value))
+ggplot(training_reward) + geom_smooth(mapping = aes(Step,Value))
+```
