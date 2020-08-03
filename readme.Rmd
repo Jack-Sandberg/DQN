@@ -3,6 +3,11 @@ title: "DQN"
 output: github_document
 ---
 
+DQN
+------------------
+Episode 50 | Episode 150 | Episode 750
+---------- | ----------- | -----------
+
 
 Dueling Double DQN with Prioritized Replay Buffer
 --------------------------------------
@@ -11,11 +16,28 @@ Episode 50 | Episode 150 | Episode 750
 <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_50_step_51540.gif" width = 200 /> | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_150_step_312995.gif" width = 200 /> | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_750_step_1730869.gif" width = 200 />
 
 
-```{r plots}
-eval_reward = read.csv("Pong/DuelingDoubleDQNData/eval_reward.csv")
-training_reward = read.csv("Pong/DuelingDoubleDQNData/training_reward.csv")
+```{r reading_data, echo = FALSE, warning=FALSE, message=FALSE}
+eval_reward_D3QN = read.csv("Pong/DuelingDoubleDQNData/eval_reward.csv")
+training_reward_D3QN = read.csv("Pong/DuelingDoubleDQNData/training_reward.csv")
+
+eval_reward_DQN = read.csv("Pong/DQNData/eval_reward.csv")
+training_reward_DQN = read.csv("Pong/DQNData/training_reward.csv")
 library(tidyverse)
-attach(eval_reward)
-ggplot(eval_reward) + geom_line(mapping = aes(Step,Value))
-ggplot(training_reward) + geom_smooth(mapping = aes(Step,Value))
+library(viridis)
+```
+
+```{r plotting, echo=FALSE, fig.height=3, fig.width=5}
+ggplot() + geom_line(aes(eval_reward_D3QN$Step, eval_reward_D3QN$Value, colour = "D3QN"), size = 1) + 
+          geom_line(aes(eval_reward_DQN$Step, eval_reward_DQN$Value, colour = "DQN"), size = 1) + 
+          labs(title = "Evaluation reward", y = element_blank(),  x = "Episode") + 
+          theme(plot.title = element_text(hjust = 0.5), legend.title = element_blank(), legend.position = c(0.9,0.3))
+```
+
+```{r plotting2, echo=FALSE, warning=FALSE, message=FALSE, fig.width=5, fig.height = 3}
+ourColours = rainbow(2)
+p <- ggplot() + geom_smooth(aes(training_reward_D3QN$Step, training_reward_D3QN$Value, colour = "D3QN"), span = 0.01, se = F) + 
+                geom_smooth(aes(training_reward_DQN$Step, training_reward_DQN$Value, colour = "DQN"), span = 0.01, se = F) + 
+                labs(title="Training reward", x = "Episode", y = element_blank()) + 
+                theme(plot.title = element_text(hjust = 0.5), legend.title=element_blank(),legend.position = c(0.9,0.3))
+p
 ```
