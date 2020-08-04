@@ -3,8 +3,9 @@ DQN
 
 ## DQN
 
-| Episode 50 | Episode 150 | Episode 750 |
-| ---------- | ----------- | ----------- |
+| Episode 50                                                                 | Episode 200                                                                  | Episode 750                                                                   |
+| -------------------------------------------------------------------------- | ---------------------------------------------------------------------------- | ----------------------------------------------------------------------------- |
+| <img src = "Pong/DQNGifs/DQNAgenteval_ep_50_step_49640.gif" width = 200 /> | <img src = "Pong/DQNGifs/DQNAgenteval_ep_200_step_401908.gif" width = 200 /> | <img src = "Pong/DQNGifs/DQNAgenteval_ep_750_step_1439978.gif" width = 200 /> |
 
 ## Dueling Double DQN with Prioritized Replay Buffer
 
