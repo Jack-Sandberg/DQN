@@ -5,29 +5,28 @@ output: github_document
 In this project, I have implemented the Deep Q Network presented by DeepMind researchers in [the original paper](https://www.cs.toronto.edu/~vmnih/docs/dqn.pdf) and follow-up [Nature paper](https://web.stanford.edu/class/psych209/Readings/MnihEtAlHassibis15NatureControlDeepRL.pdf). I have also implemented several architectures that improve upon the original DQN including [Double DQN](https://arxiv.org/abs/1509.06461), [Prioritized Experience Replay](https://arxiv.org/abs/1511.05952) and [Dueling DQN](https://arxiv.org/abs/1511.05952).
 
 
+### Evaluation samples from Dueling Double DQN with Prioritized Replay Buffer:
+
+| Episode 50 | Episode 150 | Episode 750 |
+| :-:| :-: | :-: |
+| <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_50_step_51540.gif" width = 200 /> | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_150_step_312995.gif" width = 200 /> | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_750_step_1730869.gif" width = 200 /> |
+
+
 ##### Resources used
 This project would not have been possible without all the brilliant resources available on the Internet. Among many, the following resources has helped me the most:
 
 - [DQN tutorial for PyTorch](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html) 
-  - Introductory tutorial to DQN got me off the ground.
+  - Introductory tutorial to DQN that got me off the ground.
 - [OpenAI Baselines](https://github.com/openai/baselines) 
-  - Irovides implementations of most Deep Reinforcement Learning algorithms. The downside is that they are written in Tensorflow. However, I used Baselines [ReplayBuffer](https://github.com/openai/baselines/blob/master/baselines/deepq/replay_buffer.py) to create ReplayBufferTorch and the wrappers available [here](https://github.com/openai/baselines/tree/master/baselines/common).
+  - Provides implementations of most Deep Reinforcement Learning algorithms written in Tensorflow. However, I used Baselines [ReplayBuffer](https://github.com/openai/baselines/blob/master/baselines/deepq/replay_buffer.py) to create ReplayBufferTorch and the wrappers available [here](https://github.com/openai/baselines/tree/master/baselines/common).
 - [Pre-processing of frames](https://danieltakeshi.github.io/2016/11/25/frame-skipping-and-preprocessing-for-deep-q-networks-on-atari-2600-games/)
+  - Goes through the pre-processing Deepmind used in their DQN paper in great detail.
 - [Guide to speeding up DQN](https://medium.com/@shmuma/speeding-up-dqn-on-pytorch-solving-pong-in-30-minutes-81a1bd2dff55)
-  - The original DQN paper uses 
+  - Excellent guide to speeding up the convergence of DQN, provides hyperparameters that works with the smaller replay buffer.
+
+#### Hyperparameters
 
 
-DQN
-------------------
-Episode 50 | Episode 200 | Episode 750
----------- | ----------- | -----------
-<img src = "Pong/DQNGifs/DQNAgenteval_ep_50_step_49640.gif" width = 200 /> | <img src = "Pong/DQNGifs/DQNAgenteval_ep_200_step_401908.gif" width = 200 /> | <img src = "Pong/DQNGifs/DQNAgenteval_ep_750_step_1439978.gif" width = 200 />
-
-Dueling Double DQN with Prioritized Replay Buffer
---------------------------------------
-Episode 50 | Episode 150 | Episode 750
----------- | ----------- | -----------
-<img src = "Pong/DuelingDoubleDQNGifs/eval_ep_50_step_51540.gif" width = 200 /> | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_150_step_312995.gif" width = 200 /> | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_750_step_1730869.gif" width = 200 />
 
 
 ```{r reading_data, echo = FALSE, warning=FALSE, message=FALSE}
@@ -39,24 +38,45 @@ training_reward_DQN = read.csv("Pong/DQNData/training_reward.csv")
 
 eval_reward_DDQN = read.csv("Pong/DoubleDQNData/eval_reward.csv")
 training_reward_DDQN = read.csv("Pong/DoubleDQNData/training_reward.csv")
+
+eval_reward_DDQNPrio = read.csv("Pong/DoubleDQNPrioData/eval_reward.csv")
+training_reward_DDQNPrio = read.csv("Pong/DoubleDQNPrioData/training_reward.csv")
 library(tidyverse)
 library(viridis)
 ```
 
-```{r plotting, echo=FALSE, fig.height=3, fig.width=5}
+```{r evalplot, echo=FALSE, fig.height=3, fig.width=5}
 ggplot() + geom_line(aes(eval_reward_D3QN$Step, eval_reward_D3QN$Value, colour = "D3QN"), size = 1) + 
           geom_line(aes(eval_reward_DQN$Step, eval_reward_DQN$Value, colour = "DQN"), size = 1) +
           geom_line(aes(eval_reward_DDQN$Step, eval_reward_DDQN$Value, colour = "Double DQN"), size = 1) +
+          geom_line(aes(eval_reward_DDQNPrio$Step, eval_reward_DDQNPrio$Value, colour = "Double DQN w Prio"), size = 1) +
           labs(title = "Evaluation reward", y = element_blank(),  x = "Episode") + 
-          theme(plot.title = element_text(hjust = 0.5), legend.title = element_blank(), legend.position = c(0.9,0.3))
+          theme(plot.title = element_text(hjust = 0.5), legend.title = element_blank(), legend.position = c(0.8,0.3))
 ```
 
-```{r plotting2, echo=FALSE, warning=FALSE, message=FALSE, fig.width=5, fig.height = 3}
+```{r rewardplot, echo=FALSE, warning=FALSE, message=FALSE, fig.width=5, fig.height = 3}
 ourColours = rainbow(3)
 p <- ggplot() + geom_smooth(aes(training_reward_D3QN$Step, training_reward_D3QN$Value, colour = "D3QN"), span = 0.01, se = F) + 
                 geom_smooth(aes(training_reward_DQN$Step, training_reward_DQN$Value, colour = "DQN"), span = 0.01, se = F) + 
                 geom_smooth(aes(training_reward_DDQN$Step, training_reward_DDQN$Value, colour = "Double DQN"), span = 0.01, se = F) + 
+                geom_smooth(aes(training_reward_DDQNPrio$Step, training_reward_DDQNPrio$Value, colour = "Double DQN w Prio"), span = 0.01, se = F) +
                 labs(title="Training reward", x = "Episode", y = element_blank()) + 
-                theme(plot.title = element_text(hjust = 0.5), legend.title=element_blank(),legend.position = c(0.9,0.3))
+                theme(plot.title = element_text(hjust = 0.5), legend.title=element_blank(),legend.position = c(0.8,0.3))
 p
+```
+
+```{r logplot, echo=FALSE, warning=FALSE, message=FALSE, fig.width=5, fig.height=3}
+dqnlog <- read.csv("Pong/PonglogOG.csv")
+ddqnlog <- read.csv("Pong/PonglogD.csv")
+d3qnlog <- read.csv("Pong/PonglogDD.csv")
+ddqnPriolog <- read.csv("Pong/PonglogDPrio.csv")
+
+p <- ggplot() + geom_smooth(aes(dqnlog$stepsdone, dqnlog$cum_reward, colour = "DQN"), span = 0.01, se = F) +
+                geom_smooth(aes(ddqnlog$stepsdone, ddqnlog$cum_reward, colour = "Double DQN"), span = 0.01, se = F) +
+                geom_smooth(aes(d3qnlog$stepsdone, d3qnlog$cum_reward, colour = "D3QN"), span = 0.01, se = F) +
+                geom_smooth(aes(ddqnPriolog$stepsdone, ddqnPriolog$cum_reward, colour = "Double DQN w Prio"), span = 0.01, se = F) +
+                labs(title = "Training reward", x = "Step", y = element_blank())+
+                theme(plot.title = element_text(hjust = 0.5), legend.title = element_blank(), legend.position = c(0.8,0.3))
+p
+  
 ```
