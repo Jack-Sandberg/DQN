@@ -17,7 +17,9 @@ original DQN including [Double DQN](https://arxiv.org/abs/1509.06461),
 | :-----------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: |
 | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_50_step_51540.gif" width = 200 /> | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_150_step_312995.gif" width = 200 /> | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_750_step_1730869.gif" width = 200 /> |
 
-##### Resources used
+![](readme_files/figure-gfm/all%20plots-1.svg)<!-- -->
+
+### Resources used
 
 This project would not have been possible without all the brilliant
 resources available on the Internet. Among many, the following resources
@@ -41,10 +43,4 @@ has helped me the most:
       - Excellent guide to speeding up the convergence of DQN, provides
         hyperparameters that works with the smaller replay buffer.
 
-#### Hyperparameters
-
-![](readme_files/figure-gfm/evalplot-1.png)<!-- -->
-
-![](readme_files/figure-gfm/rewardplot-1.png)<!-- -->
-
-![](readme_files/figure-gfm/logplot-1.png)<!-- -->
+### Hyperparameters
