@@ -17,7 +17,21 @@ original DQN including [Double DQN](https://arxiv.org/abs/1509.06461),
 | :-----------------------------------------------------------------------------: | :-------------------------------------------------------------------------------: | :--------------------------------------------------------------------------------: |
 | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_50_step_51540.gif" width = 200 /> | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_150_step_312995.gif" width = 200 /> | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_750_step_1730869.gif" width = 200 /> |
 
-![](readme_files/figure-gfm/all%20plots-1.svg)<!-- -->
+### Reward and Q-value plots
+
+<img src="readme_files/figure-gfm/all plots-1.svg" style="display: block; margin: auto;" />
+The first two figures show that all models learn to solve Pong with D3QN
+with Prio and DQN being the faster learners. The third figure shows that
+DQN initially learns that the average Q-value is negative while playing
+randomly. After some time, the average Q-values increase along with the
+rewards received. The fourth figure shows that the maximum Q-value
+calculated per episode increases steadily at the start for D3Qn and DQN.
+In general, the max Q-value is significantly larger than the average
+Q-value which shows that DQN can distinguish between states of different
+values. Keep in mind that DQN can be sensitive to the random seed
+assigned and that the models were only trained once. Additionally, the
+proposed improvements (Double, Dueling and Prio.) were assessed on the
+scores across on all Atari games and not on Pong in particular.
 
 ### Resources used
 
@@ -41,6 +55,23 @@ has helped me the most:
   - [Guide to speeding up
     DQN](https://medium.com/@shmuma/speeding-up-dqn-on-pytorch-solving-pong-in-30-minutes-81a1bd2dff55)
       - Excellent guide to speeding up the convergence of DQN, provides
-        hyperparameters that works with the smaller replay buffer.
+        hyperparameters that converges faster.
 
 ### Hyperparameters
+
+Trained for \~800 episodes and performed an evaluation every 50 episodes
+that consisted of playing 5 episodes.
+
+  - Update frequency = 4 (number of steps in the environment before
+    performing an optimization step),
+  - Batch size = 32\*4 = 128,
+  - Gamma = 0.99,
+  - Epsilon linearly decreasing from 1 to 0.02 over 100 000 steps with
+    an evaluation epsilon of 0.002,
+  - Target network updated every 1 000 steps,
+  - Replay buffer initialized with 10 000 random steps and maximum
+    capacity of 100 000,
+  - Learning rate for ADAM optimizer = 0.0001,
+  - Prioritized Experience Replay:
+      - Alpha = 0.6,
+      - Beta linearly increasing from 0.4 to 1 over 20 000 000 steps.

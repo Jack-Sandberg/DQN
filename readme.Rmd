@@ -11,41 +11,73 @@ In this project, I have implemented the Deep Q Network presented by DeepMind res
 | :-:| :-: | :-: |
 | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_50_step_51540.gif" width = 200 /> | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_150_step_312995.gif" width = 200 /> | <img src = "Pong/DuelingDoubleDQNGifs/eval_ep_750_step_1730869.gif" width = 200 /> |
 
-
+### Reward and Q-value plots
 ```{r reading_data, echo = FALSE, warning=FALSE, message=FALSE}
 eval_reward_D3QN = read.csv("Pong/DuelingDoubleDQNData/eval_reward.csv")
 training_reward_D3QN = read.csv("Pong/DuelingDoubleDQNData/training_reward.csv")
+max_reward_D3QN = read.csv("Pong/DuelingDoubleDQNData/max_reward.csv")
+ave_q_D3QN = read.csv("Pong/DuelingDoubleDQNData/training_ave_q.csv")
+max_q_D3QN = read.csv("Pong/DuelingDoubleDQNData/training_max_q.csv")
 
 eval_reward_DQN = read.csv("Pong/DQNData/eval_reward.csv")
 training_reward_DQN = read.csv("Pong/DQNData/training_reward.csv")
+max_reward_DQN = read.csv("Pong/DQNData/training_max_reward.csv")
+ave_q_DQN = read.csv("Pong/DQNData/training_ave_q.csv")
+max_q_DQN = read.csv("Pong/DQNData/training_max_q.csv")
 
 eval_reward_DDQN = read.csv("Pong/DoubleDQNData/eval_reward.csv")
 training_reward_DDQN = read.csv("Pong/DoubleDQNData/training_reward.csv")
+max_reward_DDQN = read.csv("Pong/DoubleDQNData/training_max_reward.csv")
+ave_q_DDQN = read.csv("Pong/DoubleDQNData/training_ave_q.csv")
+max_q_DDQN = read.csv("Pong/DoubleDQNData/training_max_q.csv")
 
 eval_reward_DDQNPrio = read.csv("Pong/DoubleDQNPrioData/eval_reward.csv")
 training_reward_DDQNPrio = read.csv("Pong/DoubleDQNPrioData/training_reward.csv")
+max_reward_DDQNPrio = read.csv("Pong/DoubleDQNPrioData/training_max_reward.csv")
+ave_q_DDQNPrio = read.csv("Pong/DoubleDQNPrioData/training_ave_q.csv")
+max_q_DDQNPrio = read.csv("Pong/DoubleDQNPrioData/training_max_q.csv")
+
 library(tidyverse)
 library(viridis)
 ```
 
 ```{r evalplot, echo=FALSE}
-evalplot <- ggplot() + geom_line(aes(eval_reward_D3QN$Step, eval_reward_D3QN$Value, colour = "D3QN"), size = 1) + 
+evalplot <- ggplot() + geom_line(aes(eval_reward_D3QN$Step, eval_reward_D3QN$Value, colour = "D3QN w Prio"), size = 1) + 
           geom_line(aes(eval_reward_DQN$Step, eval_reward_DQN$Value, colour = "DQN"), size = 1) +
           geom_line(aes(eval_reward_DDQN$Step, eval_reward_DDQN$Value, colour = "Double DQN"), size = 1) +
           geom_line(aes(eval_reward_DDQNPrio$Step, eval_reward_DDQNPrio$Value, colour = "Double DQN w Prio"), size = 1) +
           labs(title = "Evaluation reward", y = element_blank(),  x = "Episode") + 
-          theme(plot.title = element_text(hjust = 0.5), legend.title = element_blank(), legend.position = "none")
+          theme(plot.title = element_text(hjust = 0.5), legend.title = element_blank(), legend.position = c(0.84,0.25))
+maxplot <- ggplot() + geom_line(aes(max_reward_D3QN$Step, max_reward_D3QN$Value, colour = "D3QN w Prio"), size = 1) + 
+          geom_line(aes(max_reward_DQN$Step, max_reward_DQN$Value, colour = "DQN"), size = 1) +
+          geom_line(aes(max_reward_DDQN$Step, max_reward_DDQN$Value, colour = "Double DQN"), size = 1) +
+          geom_line(aes(max_reward_DDQNPrio$Step, max_reward_DDQNPrio$Value, colour = "Double DQN w Prio"), size = 1) +
+          labs(title = "Max reward", y = element_blank(),  x = "Episode") + 
+          theme(plot.title = element_text(hjust = 0.5), legend.title = element_blank(), legend.position = c(0.84,0.25))
 ```
 
 ```{r rewardplot, echo=FALSE, warning=FALSE, message=FALSE}
-ourColours = rainbow(3)
-rewardplot <- ggplot() + geom_smooth(aes(training_reward_D3QN$Step, training_reward_D3QN$Value, colour = "D3QN"), span = 0.01, se = F) + 
-                geom_smooth(aes(training_reward_DQN$Step, training_reward_DQN$Value, colour = "DQN"), span = 0.01, se = F) + 
-                geom_smooth(aes(training_reward_DDQN$Step, training_reward_DDQN$Value, colour = "Double DQN"), span = 0.01, se = F) + 
-                geom_smooth(aes(training_reward_DDQNPrio$Step, training_reward_DDQNPrio$Value, colour = "Double DQN w Prio"), span = 0.01, se = F) +
+rewardplot <- ggplot() + geom_smooth(aes(training_reward_D3QN$Step, training_reward_D3QN$Value, colour = "D3QN"), span = 0.003, se = F) + 
+                geom_smooth(aes(training_reward_DQN$Step, training_reward_DQN$Value, colour = "DQN"), span = 0.003, se = F) + 
+                geom_smooth(aes(training_reward_DDQN$Step, training_reward_DDQN$Value, colour = "Double DQN"), span = 0.003, se = F) + 
+                geom_smooth(aes(training_reward_DDQNPrio$Step, training_reward_DDQNPrio$Value, colour = "Double DQN w Prio"), span = 0.003, se = F) +
                 labs(title="Training reward", x = "Episode", y = element_blank()) + 
                 theme(plot.title = element_text(hjust = 0.5), legend.title=element_blank(),legend.position = "none")
+```
 
+```{r ave_qplot, echo = FALSE, warning = FALSE, message=FALSE}
+ave_qplot <- ggplot() + geom_line(aes(ave_q_DQN$Step, ave_q_DQN$Value, colour = "DQN"), span = 0.005, se = F) +
+              geom_line(aes(ave_q_D3QN$Step, ave_q_D3QN$Value, colour = "D3QN"), span = 0.005, se = F) +
+              geom_line(aes(ave_q_DDQN$Step, ave_q_DDQN$Value, colour = "Double DQN"), span = 0.005, se = F) +
+              geom_line(aes(ave_q_DDQNPrio$Step, ave_q_DDQNPrio$Value, colour = "Double DQN w Prio"), span = 0.005, se = F) +
+              labs(title="Average Q-value per episode", x = "Episode", y = element_blank()) + 
+              theme(plot.title = element_text(hjust = 0.5), legend.title= element_blank(), legend.position = "none")
+max_qplot <- ggplot() + geom_line(aes(max_q_DQN$Step, max_q_DQN$Value, colour = "DQN"), span = 0.005, se = F) +
+              geom_line(aes(max_q_D3QN$Step, max_q_D3QN$Value, colour = "D3QN"), span = 0.005, se = F) +
+              geom_line(aes(max_q_DDQN$Step, max_q_DDQN$Value, colour = "Double DQN"), span = 0.005, se = F) +
+              geom_line(aes(max_q_DDQNPrio$Step, max_q_DDQNPrio$Value, colour = "Double DQN w Prio"), span = 0.005, se = F) +
+              labs(title="Max Q-value per episode", x = "Episode", y = element_blank()) + 
+              theme(plot.title = element_text(hjust = 0.5), legend.title= element_blank(), legend.position = "none")
 ```
 
 ```{r logplot, echo=FALSE, warning=FALSE, message=FALSE}
@@ -65,15 +97,16 @@ logplot <- ggplot() + geom_smooth(aes(dqnlog$stepsdone, dqnlog$cum_reward, colou
   
 ```
 
-```{r all plots, echo=FALSE, warning=FALSE, message=FALSE, fig.width = 15, fig.height = 6, dev="svg"}
+
+```{r all plots, echo=FALSE, warning=FALSE, message=FALSE, dev="svg", fig.align= 'center', fig.width = 12, fig.height = 7}
 library(gridExtra)
-grid.arrange(evalplot, rewardplot, logplot,
-             widths = c(1,1,2),
+grid.arrange(evalplot, rewardplot, ave_qplot, max_qplot,
+             widths = c(1,1),
              layout_matrix = rbind(c(1,2),
-                                   c(3,3))
+                                   c(3,4))
              )
 ```
-
+The first two figures show that all models learn to solve Pong with D3QN with Prio and DQN being the faster learners. The third figure shows that DQN initially learns that the average Q-value is negative while playing randomly. After some time, the average Q-values increase along with the rewards received. The fourth figure shows that the maximum Q-value calculated per episode increases steadily at the start for D3Qn and DQN. In general, the max Q-value is significantly larger than the average Q-value which shows that DQN can distinguish between states of different values.  Keep in mind that DQN can be sensitive to the random seed assigned and that the models were only trained once. Additionally, the proposed improvements (Double, Dueling and Prio.) were assessed on the scores across on all Atari games and not on Pong in particular.
 
 
 ### Resources used
@@ -86,6 +119,19 @@ This project would not have been possible without all the brilliant resources av
 - [Pre-processing of frames](https://danieltakeshi.github.io/2016/11/25/frame-skipping-and-preprocessing-for-deep-q-networks-on-atari-2600-games/)
   - Goes through the pre-processing Deepmind used in their DQN paper in great detail.
 - [Guide to speeding up DQN](https://medium.com/@shmuma/speeding-up-dqn-on-pytorch-solving-pong-in-30-minutes-81a1bd2dff55)
-  - Excellent guide to speeding up the convergence of DQN, provides hyperparameters that works with the smaller replay buffer.
+  - Excellent guide to speeding up the convergence of DQN, provides hyperparameters that converges faster.
 
 ### Hyperparameters
+Trained for ~800 episodes and performed an evaluation every 50 episodes that consisted of playing 5 episodes. 
+
+- Update frequency = 4 (number of steps in the environment before performing an optimization step),
+- Batch size = 32*4 = 128,
+- Gamma = 0.99,
+- Epsilon linearly decreasing from 1 to 0.02 over 100 000 steps with an evaluation epsilon of 0.002,
+- Target network updated every 1 000 steps,
+- Replay buffer initialized with 10 000 random steps and maximum capacity of 100 000,
+- Learning rate for ADAM optimizer = 0.0001,
+- Prioritized Experience Replay:
+  - Alpha = 0.6,
+  - Beta linearly increasing from 0.4 to 1 over 20 000 000 steps.
+
