@@ -6,10 +6,9 @@ DeepMind researchers in [the original
 paper](https://www.cs.toronto.edu/~vmnih/docs/dqn.pdf) and follow-up
 [Nature
 paper](https://web.stanford.edu/class/psych209/Readings/MnihEtAlHassibis15NatureControlDeepRL.pdf).
-I have also implemented several architectures that improve upon the
-original DQN including [Double DQN](https://arxiv.org/abs/1509.06461),
-[Prioritized Experience Replay](https://arxiv.org/abs/1511.05952) and
-[Dueling DQN](https://arxiv.org/abs/1511.05952).
+I have also implemented architectures that improve upon the original
+DQN: [Double DQN](https://arxiv.org/abs/1509.06461) and [Dueling
+DQN](https://arxiv.org/abs/1511.05952).
 
 ### Evaluation samples from Dueling Double DQN with Prioritized Replay Buffer:
 
@@ -28,16 +27,19 @@ rewards received. The fourth figure shows that the maximum Q-value
 calculated per episode increases steadily at the start for D3Qn and DQN.
 In general, the max Q-value is significantly larger than the average
 Q-value which shows that DQN can distinguish between states of different
-values. Keep in mind that DQN can be sensitive to the random seed
-assigned and that the models were only trained once. Additionally, the
-proposed improvements (Double, Dueling and Prio.) were assessed on the
-scores across on all Atari games and not on Pong in particular.
+values.
+
+Keep in mind that the learning speed of DQN can be sensitive to the
+random seed assigned and that the models were only trained once.
+Additionally, the proposed improvements to DQN (Double, Dueling and PER)
+were assessed on the scores across on all Atari games and not on Pong in
+particular.
 
 ### Resources used
 
 This project would not have been possible without all the brilliant
 resources available on the Internet. Among many, the following resources
-has helped me the most:
+have helped me the most:
 
   - [DQN tutorial for
     PyTorch](https://pytorch.org/tutorials/intermediate/reinforcement_q_learning.html)
